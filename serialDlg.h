@@ -63,7 +63,6 @@ public:
 	afx_msg void OnBnClickedButtonbox02();
 	CMyButton m_box2;
 	char boxnostate[2];
-	//afx_msg void OnBnClickedButtonbox3();
 	afx_msg void OnBnClickedButtonbox4();
 	afx_msg void OnBnClickedButtonbox5();
 	afx_msg void OnBnClickedButtonbox6();
@@ -112,9 +111,7 @@ public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	void ChangeSIZE(CWnd * pWnd, int cx, int cy);
 	afx_msg void OnBnClickedButtonbox1();
-	//afx_msg void OnBnClickedButtonbox03();
 	CMyButton m_box1;
-	//CMyButton m_box3;
 	int auto_set_serial();
 	CString m_showcheck;
 	CStatic m_showcheckc;
@@ -135,7 +132,6 @@ public:
 
 	int filter;
 	
-	//threadInfo Info;
 	afx_msg void OnStnClickedStatictestreport();
 
 	CStatic m_box1text;

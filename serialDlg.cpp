@@ -65,7 +65,6 @@ void CserialDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COMBO2, m_baud_rate);
 	DDX_Control(pDX, IDC_MSCOMM1, m_mscomm);
 	DDX_Control(pDX, IDC_BUTTON_box1, m_box1);
-	//DDX_Control(pDX, IDC_BUTTON_box03, m_box3);
 	DDX_Control(pDX, IDC_BUTTON_box02, m_box2);
 	DDX_Control(pDX, IDC_BUTTON_box4, m_box4);
 	DDX_Control(pDX, IDC_BUTTON_box5, m_box5);
@@ -84,31 +83,10 @@ void CserialDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_box18, m_box18);
 	DDX_Control(pDX, IDC_BUTTON_box19, m_box19);
 	DDX_Control(pDX, IDC_BUTTON_box20, m_box20);
-	DDX_Control(pDX, IDC_STATIC_showcheck, m_showcheckc);
 	DDX_Control(pDX, IDC_CHECK_machine_test, m_machine_test);
 	DDX_Control(pDX, IDC_CHECK_frame_test, m_frame_test);
 	DDX_Control(pDX, IDC_BUTTON_box3, m_box3);
 	DDX_Control(pDX, IDC_BUTTON_box3, m_box3);
-	DDX_Control(pDX, IDC_STATIC_box1text, m_box1text);
-	DDX_Control(pDX, IDC_STATIC_box2text, m_box2text);
-	DDX_Control(pDX, IDC_STATIC_box3text, m_box3text);
-	DDX_Control(pDX, IDC_STATIC_box4text, m_box4text);
-	DDX_Control(pDX, IDC_STATIC_box5text, m_box5text);
-	DDX_Control(pDX, IDC_STATIC_box6text, m_box6text);
-	DDX_Control(pDX, IDC_STATIC_box7text, m_box7text);
-	DDX_Control(pDX, IDC_STATIC_box8text, m_box8text);
-	DDX_Control(pDX, IDC_STATIC_box9text, m_box9text);
-	DDX_Control(pDX, IDC_STATIC_box10text, m_box10text);
-	DDX_Control(pDX, IDC_STATIC_box11text, m_box11text);
-	DDX_Control(pDX, IDC_STATIC_box12text, m_box12text);
-	DDX_Control(pDX, IDC_STATIC_box13text, m_box13text);
-	DDX_Control(pDX, IDC_STATIC_box14text, m_box14text);
-	DDX_Control(pDX, IDC_STATIC_box15text, m_box15text);
-	DDX_Control(pDX, IDC_STATIC_box16text, m_box16text);
-	DDX_Control(pDX, IDC_STATIC_box17text, m_box17text);
-	DDX_Control(pDX, IDC_STATIC_box18text, m_box18text);
-	DDX_Control(pDX, IDC_STATIC_box19text, m_box19text);
-	DDX_Control(pDX, IDC_STATIC_box20text, m_box20text);
 }
 
 BEGIN_MESSAGE_MAP(CserialDlg, CDialogEx)
@@ -139,7 +117,6 @@ BEGIN_MESSAGE_MAP(CserialDlg, CDialogEx)
 	ON_WM_TIMER()
 	ON_WM_SIZE()
 	ON_BN_CLICKED(IDC_BUTTON_box1, &CserialDlg::OnBnClickedButtonbox1)
-	//ON_BN_CLICKED(IDC_BUTTON_box03, &CserialDlg::OnBnClickedButtonbox03)
 	ON_BN_CLICKED(IDC_BUTTON_box3, &CserialDlg::OnBnClickedButtonbox3)
 	ON_BN_CLICKED(IDC_BUTTON_updatestate, &CserialDlg::OnBnClickedButtonupdatestate)
 	ON_STN_CLICKED(IDC_STATIC_note, &CserialDlg::OnStnClickedStaticnote)
@@ -359,18 +336,8 @@ void CserialDlg::OnBnClickedButtonOpen()
 			flag = 1;
 			framestate = 0;
 			boxno = 0;
-			//get_state(0);
 
-			SetTimer(1, 20, NULL);
-		//	SetTimer(4, 20, NULL);
-
-			/*
-			while (boxno <= 20)
-			{
-				get_state(boxno);
-				Sleep(20);
-				boxno++;
-			}*/
+			SetTimer(1, 80, NULL);
 
 		}
 
@@ -470,12 +437,11 @@ void CserialDlg::OnCommMscomm1()
 		COleSafeArray fs;
 		fs = InputData; //VARIANT型变?量转换为COleSafeArray型变量   
 
-		TRACE("GETlen: %s\n",m_mscomm.get_Input());
-		TRACE("LEN: %d\n", fs.GetOneDimSize());
+	//	TRACE("GETlen: %s\n",m_mscomm.get_Input());
+	//	TRACE("LEN: %d\n", fs.GetOneDimSize());
+
 		for (k = 0; k < fs.GetOneDimSize(); k++)
-		{
 			fs.GetElement(&k, str + k); //转换为BYTE型数组
-		}
 
 		m_edit_receive += str;      // 接收到编辑框里面  
 
@@ -484,11 +450,10 @@ void CserialDlg::OnCommMscomm1()
 			m_edit_receive = _T("");
 			str[11] = { 0 };
 
+			if (frame_check)
+				SetTimer(1, 80, NULL);
 			if (check)
 			{
-				//get_state(boxnum - 1);
-				//Sleep(100);
-				//KillTimer(2);
 				SetTimer(3, 100, NULL);
 			}
 		}
@@ -496,6 +461,7 @@ void CserialDlg::OnCommMscomm1()
 		if (str[0] == 'H' && str[1] == 'H' && str[2] == 'L' && str[3] == 'N')
 		{
 			TRACE("str[6]boxno--------------------- %d\n", str[6]);
+
 
 			char CHK = 0;
 
@@ -509,20 +475,16 @@ void CserialDlg::OnCommMscomm1()
 				if (str[9] == 0)
 				{
 					state = 1;
-				//	boxnum = str[6];
-					TRACE("str[6] %d\n", str[6]);
-				//	Sleep(10);
+		
 					if (frame_check)
 					{
 						showboxno = str[6];
 						str[11] = { 0 };
 
+						KillTimer(1);
 						open_box(showboxno);
 
-						//	showboxno = str[6];
-						Sleep(20);
 						showblue(showboxno);
-						//shownormaltext();
 					}
 
 					if (check)
@@ -531,8 +493,6 @@ void CserialDlg::OnCommMscomm1()
 				else
 				{
 					state = 0;
-					if(frame_check)
-						showWhiteSmoke(str[6]);
 					if(check)
 						showred(str[6]);
 				}
@@ -542,15 +502,14 @@ void CserialDlg::OnCommMscomm1()
 
 		}
 
-	//	if(check)
-		//	select_open_close();
-
 		m_edit_receive = _T("");
 		str[20] = { 0 };
 
 		UpdateData(false);
 	}
 }
+
+/*
 void CserialDlg::shownormaltext()
 {
 	CString cStr;
@@ -735,7 +694,7 @@ void CserialDlg::shownormaltext()
 		m_box20text.ShowWindow(SW_SHOW);
 
 	}
-}
+}*/
 void CserialDlg::select_open_close()
 {
 	if (check)
@@ -1182,7 +1141,7 @@ void CserialDlg::open_box(int boxno)
 	m_mscomm.put_InputLen(6);
 	m_mscomm.put_RThreshold(6);
 
-	TRACE("open boxno: %d\n", boxno);
+//	TRACE("open boxno: %d\n", boxno);
 	UpdateData(true);
 	//更新控件数据 
 	CByteArray hexdata;
@@ -1212,12 +1171,12 @@ void CserialDlg::OnTimer(UINT_PTR nIDEvent)
 
 	switch (nIDEvent)
 	{
-	case 1:
+		case 1:
 		if (boxno >= 20)
 			boxno = 0;
 
 		get_state(boxno++);
-
+		
 		//TRACE("tiemboxno: %d\n", boxno);
 
 		break;
@@ -1362,6 +1321,12 @@ void CserialDlg::OnSize(UINT nType, int cx, int cy)
 	pWnd = GetDlgItem(IDC_COMBO1);
 	ChangeSIZE(pWnd, cx, cy);
 	pWnd = GetDlgItem(IDC_COMBO2);
+	ChangeSIZE(pWnd, cx, cy);
+	pWnd = GetDlgItem(IDC_CHECK_frame_test);
+	ChangeSIZE(pWnd, cx, cy);
+	pWnd = GetDlgItem(IDC_CHECK_machine_test);
+	ChangeSIZE(pWnd, cx, cy);
+	pWnd = GetDlgItem(IDC_BUTTON_updatestate);
 	ChangeSIZE(pWnd, cx, cy);
 	pWnd = GetDlgItem(IDC_BUTTON_Open);
 	ChangeSIZE(pWnd, cx, cy);
