@@ -92,12 +92,7 @@ public:
 	char ConvertHexChar(char);
 	int getDoorStatus();
 
-	char str[11] = { 0 };
-	
-
-
 	CButton m_ctrlHexSend;
-
 	CMyButton m_box1;
 	CMyButton m_box2;
 	CMyButton m_box3;
@@ -154,4 +149,6 @@ public:
 	int framestate;
 	int boxnum;
 	int showboxno;
+
+	char str[11];
 };
