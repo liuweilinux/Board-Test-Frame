@@ -83,9 +83,9 @@ void CserialDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_box18, m_box18);
 	DDX_Control(pDX, IDC_BUTTON_box19, m_box19);
 	DDX_Control(pDX, IDC_BUTTON_box20, m_box20);
+	DDX_Control(pDX, IDC_STATIC_showcheck, m_showcheckc);
 	DDX_Control(pDX, IDC_CHECK_machine_test, m_machine_test);
 	DDX_Control(pDX, IDC_CHECK_frame_test, m_frame_test);
-	DDX_Control(pDX, IDC_BUTTON_box3, m_box3);
 	DDX_Control(pDX, IDC_BUTTON_box3, m_box3);
 }
 
@@ -96,7 +96,9 @@ BEGIN_MESSAGE_MAP(CserialDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_Open, &CserialDlg::OnBnClickedButtonOpen)
 	ON_BN_CLICKED(IDC_BUTTON_Clean, &CserialDlg::OnBnClickedButtonClean)
 	ON_BN_CLICKED(IDC_BUTTON_Close, &CserialDlg::OnBnClickedButtonClose)
+	ON_BN_CLICKED(IDC_BUTTON_box1, &CserialDlg::OnBnClickedButtonbox1)
 	ON_BN_CLICKED(IDC_BUTTON_box02, &CserialDlg::OnBnClickedButtonbox02)
+	ON_BN_CLICKED(IDC_BUTTON_box3, &CserialDlg::OnBnClickedButtonbox3)
 	ON_BN_CLICKED(IDC_BUTTON_box4, &CserialDlg::OnBnClickedButtonbox4)
 	ON_BN_CLICKED(IDC_BUTTON_box5, &CserialDlg::OnBnClickedButtonbox5)
 	ON_BN_CLICKED(IDC_BUTTON_box6, &CserialDlg::OnBnClickedButtonbox6)
@@ -116,10 +118,7 @@ BEGIN_MESSAGE_MAP(CserialDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_box11, &CserialDlg::OnBnClickedButtonbox11)
 	ON_WM_TIMER()
 	ON_WM_SIZE()
-	ON_BN_CLICKED(IDC_BUTTON_box1, &CserialDlg::OnBnClickedButtonbox1)
-	ON_BN_CLICKED(IDC_BUTTON_box3, &CserialDlg::OnBnClickedButtonbox3)
 	ON_BN_CLICKED(IDC_BUTTON_updatestate, &CserialDlg::OnBnClickedButtonupdatestate)
-	ON_STN_CLICKED(IDC_STATIC_note, &CserialDlg::OnStnClickedStaticnote)
 END_MESSAGE_MAP()
 
 
@@ -156,12 +155,6 @@ BOOL CserialDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
-	str[1024] = { 0 };
-
-	//m_Font.CreatePointFont(300, _T("华文行楷"), NULL);
-	//m_tile.SetFont(&m_Font, true);
-	//m_tile.SetWindowTextW("100");
-	// TODO: 在此添加额外的初始化代码
 	// 串口选择组合框  
 	CString str;  int i; 
 	for (i = 0; i<15; i++) {
@@ -184,7 +177,6 @@ BOOL CserialDlg::OnInitDialog()
 	for (int i = 0; i < 20;i++)
 		showWhiteSmoke(i);
 
-	// x = 380 y = 744
 	m_showcheckc.MoveWindow(120, 200, 140, 245);
 
 	m_box20.MoveWindow(50, 50, 40, 40);
@@ -208,29 +200,6 @@ BOOL CserialDlg::OnInitDialog()
 	m_box8.MoveWindow(365, 150, 40, 40);
 	m_box9.MoveWindow(410, 150, 40, 40);
 	m_box10.MoveWindow(455, 150, 40, 40);
-/*
-	m_box1text.MoveWindow(50, 91, 40, 20);
-	m_box2text.MoveWindow(95, 91, 40, 20);
-	m_box3text.MoveWindow(140, 91, 40, 20);
-	m_box4text.MoveWindow(185, 91, 40, 20);
-	m_box5text.MoveWindow(230, 91, 40, 20);
-	m_box6text.MoveWindow(275, 91, 40, 20);
-	m_box7text.MoveWindow(320, 91, 40, 20);
-	m_box8text.MoveWindow(365, 91, 40, 20);
-	m_box9text.MoveWindow(410, 91, 40, 20);
-	m_box10text.MoveWindow(455, 91, 40, 20);
-
-	m_box11text.MoveWindow(50, 191, 40, 20);
-	m_box12text.MoveWindow(95, 191, 40, 20);
-	m_box13text.MoveWindow(140, 191, 40, 20);
-	m_box14text.MoveWindow(185, 191, 40, 20);
-	m_box15text.MoveWindow(230, 191, 40, 20);
-	m_box16text.MoveWindow(275, 191, 40, 20);
-	m_box17text.MoveWindow(320, 191, 40, 20);
-	m_box18text.MoveWindow(365, 191, 40, 20);
-	m_box19text.MoveWindow(410, 191, 40, 20);
-	m_box20text.MoveWindow(455, 191, 40, 20);
-	*/
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -328,7 +297,6 @@ void CserialDlg::OnBnClickedButtonOpen()
 			m_mscomm.put_RThreshold(1);   //缓冲区一个字符引发事件 
 			boxnum = 0;
 			SetTimer(2, 1500, NULL);
-			//OnBnClickedButtonbox1();
 		}
 
 		if (frame_check && !check)
@@ -336,9 +304,7 @@ void CserialDlg::OnBnClickedButtonOpen()
 			flag = 1;
 			framestate = 0;
 			boxno = 0;
-
-			SetTimer(1, 80, NULL);
-
+			SetTimer(1, 20, NULL);
 		}
 
 		if (m_mscomm.get_PortOpen()) {
@@ -367,47 +333,11 @@ void CserialDlg::OnBnClickedButtonOpen()
 			str=_T("开始测试");    
 			UpdateData(true);    
 			h1->SetWindowText(str); 
-			//改变按钮名称为打开串口
 		}
 	}
 }
-
-DWORD WINAPI ListenThreadFunc()
-{
-	//CserialDlg *pDlg = (CserialDlg *)lpParameter;
-
-	int i = 0;
-	while(TRUE)
-	{
-		TRACE("theadbox: %d\n", i++);
-
-		Sleep(20);
-	}
-}
-
-UINT CserialDlg::ThreadFunc(LPVOID pParam)
-{
-	CserialDlg *pMy = (CserialDlg *)pParam;
-
-	//threadInfo* pInfo = (threadInfo*)serial;
-
-	if (pMy->threadbox >= 20)
-		pMy->threadbox = 0;
-	while (pMy->threadbox < 20)
-	{
-		pMy->get_state(pMy->threadbox++);
-
-		TRACE("tread; %d\n", pMy->threadbox);
-
-		Sleep(20);
-	};
-	return 0;
-}
-
 void CserialDlg::OnBnClickedButtonClean()
 {
-	// TODO: 在此添加控件通知处理程序代码
-
 	m_edit_receive = _T(""); //给接收编辑框发送空格符  
 	UpdateData(false); //更新数据 
 }
@@ -415,8 +345,6 @@ void CserialDlg::OnBnClickedButtonClean()
 
 void CserialDlg::OnBnClickedButtonClose()
 {
-	// TODO: 在此添加控件通知处理程序代码
-
 	if (m_mscomm.get_PortOpen())
 		m_mscomm.put_PortOpen(false);  
 	CDialogEx::OnCancel();
@@ -428,8 +356,6 @@ END_EVENTSINK_MAP()
 
 void CserialDlg::OnCommMscomm1()
 {
-	// TODO: 在此处添加消息处理程序代码
-
 	if (m_mscomm.get_CommEvent() == 2) {
 		long k;
 		VARIANT InputData = m_mscomm.get_Input(); //读缓冲区 
@@ -437,11 +363,12 @@ void CserialDlg::OnCommMscomm1()
 		COleSafeArray fs;
 		fs = InputData; //VARIANT型变?量转换为COleSafeArray型变量   
 
-	//	TRACE("GETlen: %s\n",m_mscomm.get_Input());
-	//	TRACE("LEN: %d\n", fs.GetOneDimSize());
-
+		TRACE("GETlen: %s\n",m_mscomm.get_Input());
+		TRACE("LEN: %d\n", fs.GetOneDimSize());
 		for (k = 0; k < fs.GetOneDimSize(); k++)
+		{
 			fs.GetElement(&k, str + k); //转换为BYTE型数组
+		}
 
 		m_edit_receive += str;      // 接收到编辑框里面  
 
@@ -450,8 +377,6 @@ void CserialDlg::OnCommMscomm1()
 			m_edit_receive = _T("");
 			str[11] = { 0 };
 
-			if (frame_check)
-				SetTimer(1, 80, NULL);
 			if (check)
 			{
 				SetTimer(3, 100, NULL);
@@ -461,7 +386,6 @@ void CserialDlg::OnCommMscomm1()
 		if (str[0] == 'H' && str[1] == 'H' && str[2] == 'L' && str[3] == 'N')
 		{
 			TRACE("str[6]boxno--------------------- %d\n", str[6]);
-
 
 			char CHK = 0;
 
@@ -475,15 +399,15 @@ void CserialDlg::OnCommMscomm1()
 				if (str[9] == 0)
 				{
 					state = 1;
-		
+					TRACE("str[6] %d\n", str[6]);
 					if (frame_check)
 					{
 						showboxno = str[6];
 						str[11] = { 0 };
 
-						KillTimer(1);
 						open_box(showboxno);
 
+						Sleep(20);
 						showblue(showboxno);
 					}
 
@@ -493,13 +417,12 @@ void CserialDlg::OnCommMscomm1()
 				else
 				{
 					state = 0;
+					if(frame_check)
+						showWhiteSmoke(str[6]);
 					if(check)
 						showred(str[6]);
 				}
 			}
-			m_edit_receive = _T("");
-			str[11] = { 0 };
-
 		}
 
 		m_edit_receive = _T("");
@@ -509,192 +432,6 @@ void CserialDlg::OnCommMscomm1()
 	}
 }
 
-/*
-void CserialDlg::shownormaltext()
-{
-	CString cStr;
-
-	if (0 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box1text.SetWindowText(lpctStr);
-		m_box1text.ShowWindow(SW_SHOW);
-
-	}
-	if (1 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box2text.SetWindowText(lpctStr);
-		m_box2text.ShowWindow(SW_SHOW);
-
-	}
-	if (2 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box3text.SetWindowText(lpctStr);
-		m_box3text.ShowWindow(SW_SHOW);
-
-	}
-	if (3 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box4text.SetWindowText(lpctStr);
-		m_box4text.ShowWindow(SW_SHOW);
-
-	}
-	if (4 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box5text.SetWindowText(lpctStr);
-		m_box5text.ShowWindow(SW_SHOW);
-
-	}
-	if (5 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box6text.SetWindowText(lpctStr);
-		m_box6text.ShowWindow(SW_SHOW);
-
-	}
-	if (6 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box7text.SetWindowText(lpctStr);
-		m_box7text.ShowWindow(SW_SHOW);
-
-	}
-	if (7 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box8text.SetWindowText(lpctStr);
-		m_box8text.ShowWindow(SW_SHOW);
-
-	}
-	if (8 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box9text.SetWindowText(lpctStr);
-		m_box9text.ShowWindow(SW_SHOW);
-
-	}
-	if (9 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box10text.SetWindowText(lpctStr);
-		m_box10text.ShowWindow(SW_SHOW);
-
-	}
-	if (10 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box11text.SetWindowText(lpctStr);
-		m_box11text.ShowWindow(SW_SHOW);
-
-	}
-	if (11 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box12text.SetWindowText(lpctStr);
-		m_box12text.ShowWindow(SW_SHOW);
-
-	}
-	if (12 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box13text.SetWindowText(lpctStr);
-		m_box13text.ShowWindow(SW_SHOW);
-
-	}
-	if (13 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box14text.SetWindowText(lpctStr);
-		m_box14text.ShowWindow(SW_SHOW);
-
-	}
-	if (14 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box15text.SetWindowText(lpctStr);
-		m_box15text.ShowWindow(SW_SHOW);
-
-	}
-	if (15 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box16text.SetWindowText(lpctStr);
-		m_box16text.ShowWindow(SW_SHOW);
-
-	}
-	if (16 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box17text.SetWindowText(lpctStr);
-		m_box17text.ShowWindow(SW_SHOW);
-
-	}
-	if (17 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box18text.SetWindowText(lpctStr);
-		m_box18text.ShowWindow(SW_SHOW);
-
-	}
-	if (18 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box19text.SetWindowText(lpctStr);
-		m_box19text.ShowWindow(SW_SHOW);
-
-	}
-	if (19 == showboxno)
-	{
-		cStr += "正常";
-
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_box20text.SetWindowText(lpctStr);
-		m_box20text.ShowWindow(SW_SHOW);
-
-	}
-}*/
 void CserialDlg::select_open_close()
 {
 	if (check)
@@ -714,7 +451,6 @@ void CserialDlg::select_open_close()
 
 	if (frame_check)
 	{
-		//TRACE("boxno: %d\n", showboxno);
 		if (1 == state)
 		{
 			//showblue();
@@ -812,9 +548,6 @@ void CserialDlg::showred(int showboxno)
 		m_box19.SetBkColor(RGB(198, 25, 32));
 	if (19 == showboxno)
 		m_box20.SetBkColor(RGB(198, 25, 32));
-
-	//if (frame_check)
-	//	SetTimer(1, 100, NULL);
 }
 
 void CserialDlg::showWhiteSmoke(int boxno)
@@ -859,9 +592,6 @@ void CserialDlg::showWhiteSmoke(int boxno)
 		m_box19.SetBkColor(RGB(245, 245, 245));
 	if (19 == boxno)
 		m_box20.SetBkColor(RGB(245, 245, 245));
-
-	//if (frame_check)
-	//	SetTimer(1, 100, NULL);
 }
 
 int CserialDlg::String2Hex(CString str, CByteArray &senddata)
@@ -900,8 +630,6 @@ int CserialDlg::char2Hex(char* str, CByteArray &senddata,int len)
 {
 	int hexdata, lowhexdata;
 	int hexdatalen = 0;
-	//int len = str.length();
-	//int len = str.GetLength();
 	senddata.SetSize(len / 2);
 	for (int i = 0; i<len;)
 	{
@@ -969,7 +697,6 @@ int CserialDlg::getDoorStatus()
 	CByteArray hexdata;
 	CString a = _T("48 48 4C 4E 05 F3 01 00 00 00 F5");
 	int len = String2Hex(a, hexdata);
-	//int len = String2Hex(m_edit_send, hexdata); //此处返回的len可以用于计算发送了多少个十六进制数  
 	m_mscomm.put_Output(COleVariant(hexdata)); //发送十六进制数据 
 	
 	return 0;
@@ -984,7 +711,6 @@ void CserialDlg::OnBnClickedButtonbox02()
 
 void CserialDlg::OnBnClickedButtonbox4()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	boxno = 3;
 	if (check)
 	open_box(boxno);
@@ -993,7 +719,6 @@ void CserialDlg::OnBnClickedButtonbox4()
 
 void CserialDlg::OnBnClickedButtonbox5()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	boxno = 4;
 	if (check)
 	open_box(boxno);
@@ -1002,7 +727,6 @@ void CserialDlg::OnBnClickedButtonbox5()
 
 void CserialDlg::OnBnClickedButtonbox6()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	boxno = 5;
 	if (check)
 	open_box(boxno);
@@ -1011,7 +735,6 @@ void CserialDlg::OnBnClickedButtonbox6()
 
 void CserialDlg::OnBnClickedButtonbox7()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	boxno = 6;
 	if (check)
 	open_box(boxno);
@@ -1020,7 +743,6 @@ void CserialDlg::OnBnClickedButtonbox7()
 
 void CserialDlg::OnBnClickedButtonbox8()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	boxno = 7;
 	if (check)
 	open_box(boxno);
@@ -1029,7 +751,6 @@ void CserialDlg::OnBnClickedButtonbox8()
 
 void CserialDlg::OnBnClickedButtonbox9()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	boxno = 8;
 	if (check)
 	open_box(boxno);
@@ -1038,7 +759,6 @@ void CserialDlg::OnBnClickedButtonbox9()
 
 void CserialDlg::OnBnClickedButtonbox12()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	boxno = 11;
 	if (check)
 	open_box(boxno);
@@ -1047,7 +767,6 @@ void CserialDlg::OnBnClickedButtonbox12()
 
 void CserialDlg::OnBnClickedButtonbox14()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	boxno = 13;
 	if (check)
 	open_box(boxno);
@@ -1056,7 +775,6 @@ void CserialDlg::OnBnClickedButtonbox14()
 
 void CserialDlg::OnBnClickedButtonbox13()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	boxno = 12;
 
 	if (check)
@@ -1066,7 +784,6 @@ void CserialDlg::OnBnClickedButtonbox13()
 
 void CserialDlg::OnBnClickedButtonbox15()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	boxno = 14;
 	if (check)
 	open_box(boxno);
@@ -1075,7 +792,6 @@ void CserialDlg::OnBnClickedButtonbox15()
 
 void CserialDlg::OnBnClickedButtonbox16()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	boxno = 15;
 	if (check)
 	open_box(boxno);
@@ -1084,8 +800,6 @@ void CserialDlg::OnBnClickedButtonbox16()
 
 void CserialDlg::OnBnClickedButtonbox17()
 {
-	// TODO: 在此添加控件通知处理程序代码
-	// TODO: 在此添加控件通知处理程序代码
 	boxno = 16;
 	if (check)
 	open_box(boxno);
@@ -1094,7 +808,6 @@ void CserialDlg::OnBnClickedButtonbox17()
 
 void CserialDlg::OnBnClickedButtonbox18()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	boxno = 17;
 	if (check)
 	open_box(boxno);
@@ -1102,7 +815,6 @@ void CserialDlg::OnBnClickedButtonbox18()
 
 void CserialDlg::OnBnClickedButtonbox19()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	boxno = 18;
 	if (check)
 	open_box(boxno);
@@ -1111,7 +823,6 @@ void CserialDlg::OnBnClickedButtonbox19()
 
 void CserialDlg::OnBnClickedButtonbox20()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	boxno = 19;
 	if (check)
 	open_box(boxno);
@@ -1119,7 +830,6 @@ void CserialDlg::OnBnClickedButtonbox20()
 
 void CserialDlg::OnBnClickedButtonbox10()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	boxno = 9;
 	if (check)
 	open_box(boxno);
@@ -1127,7 +837,6 @@ void CserialDlg::OnBnClickedButtonbox10()
 
 void CserialDlg::OnBnClickedButtonbox11()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	boxno = 10;
 	if (check)
 	open_box(boxno);
@@ -1141,7 +850,7 @@ void CserialDlg::open_box(int boxno)
 	m_mscomm.put_InputLen(6);
 	m_mscomm.put_RThreshold(6);
 
-//	TRACE("open boxno: %d\n", boxno);
+	TRACE("open boxno: %d\n", boxno);
 	UpdateData(true);
 	//更新控件数据 
 	CByteArray hexdata;
@@ -1167,17 +876,13 @@ void CserialDlg::open_box(int boxno)
 
 void CserialDlg::OnTimer(UINT_PTR nIDEvent)
 {
-	// TODO: 在此添加消息处理程序代码和/或调用默认值
-
 	switch (nIDEvent)
 	{
-		case 1:
+	case 1:
 		if (boxno >= 20)
 			boxno = 0;
 
 		get_state(boxno++);
-		
-		//TRACE("tiemboxno: %d\n", boxno);
 
 		break;
 	case 2:
@@ -1185,9 +890,6 @@ void CserialDlg::OnTimer(UINT_PTR nIDEvent)
 		break;
 	case 3:
 		get_state(boxnum-1);
-	case 4:
-		//select_open_close();
-	//	showblue();
 	default:
 		break;
 	}
@@ -1219,46 +921,13 @@ void CserialDlg::get_state(int boxno)
 	hexdata.Add(0x44);
 	hexdata[10] = hexdata[5] ^ hexdata[6] ^ hexdata[7] ^ hexdata[8] ^ hexdata[9];
 	m_mscomm.put_Output(COleVariant(hexdata)); //发送十六进制数据
-
-//	if (check)
-//		KillTimer(3);
 }
 
 void CserialDlg::Chekall()
 {
-	// TODO: 在此添加控件通知处理程序代码
-/*	if (boxno >= 20)
-	{
-		boxno = 0;
-		KillTimer(2);
-		KillTimer(3);
-
-		CString cStr;
-		cStr = "sfsdf";
-		LPCTSTR lpctStr = (LPCTSTR)cStr;
-		m_showcheckc.SetWindowText(lpctStr);
-		m_showcheckc.ShowWindow(SW_SHOW);
-
-		CString str;
-		GetDlgItemText(IDC_BUTTON_Open, str);
-		CWnd *h1;
-		h1 = GetDlgItem(IDC_BUTTON_Open);
-
-		//m_mscomm.put_PortOpen(false);
-		if (str != _T("开始测试"))
-		{
-			str = _T("开始测试");
-			UpdateData(true);
-			h1->SetWindowText(str);
-			//改变按钮名称为打开串口 
-		}
-	}
-	else
-	{*/
-		KillTimer(2);
-		open_box(boxnum++);
-		Sleep(50);
-//	}
+	KillTimer(2);
+	open_box(boxnum++);
+	Sleep(50);
 }
 
 void CserialDlg::OnSize(UINT nType, int cx, int cy)
@@ -1354,52 +1023,19 @@ void CserialDlg::ChangeSIZE(CWnd * pWnd, int cx, int cy)
 
 void CserialDlg::OnBnClickedButtonbox1()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	boxno = 0;
 	if (check)
 	open_box(boxno);
 }
-
-/*
-void CserialDlg::OnBnClickedButtonbox03()
-{
-	boxno = 2;
-	if (check)
-	open_box(boxno);
-}*/
-
-
-int CserialDlg::auto_set_serial()
-{
-
-	return 0;
-}
-
-
 void CserialDlg::OnBnClickedButtonbox3()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	boxno = 2;
 	if (check)
 		open_box(boxno);
 }
 
-
-void CserialDlg::OnStnClickedStatictestreport()
-{
-	// TODO: 在此添加控件通知处理程序代码
-}
-
-
 void CserialDlg::OnBnClickedButtonupdatestate()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	for (int i = 0; i < 20;i++)
 		showWhiteSmoke(i);
-}
-
-
-void CserialDlg::OnStnClickedStaticnote()
-{
-	// TODO: 在此添加控件通知处理程序代码
 }
